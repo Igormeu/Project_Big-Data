@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+<h3 class="mb-4">Análises e Correlações</h3>
+
+<!-- BOTÃO DE ATUALIZAÇÃO -->
+<button class="btn btn-success mb-4" onclick="iniciarAtualizacao()">
+    🔄 Atualizar Dados
+</button>
+
+<!-- FORMULÁRIO DOS GRÁFICOS -->
+<form id="filtros" class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <label class="form-label">Selecione o indicador</label>
+        <select id="indicador" class="form-select">
+            <option value="IDHM_2010">IDHM 2010</option>
+            <option value="IDHM Renda_2010">IDHM Renda 2010</option>
+            <option value="Renda per capita_2010">Renda Per Capita</option>
+            <option value="cnes_total">Total Estabelecimentos CNES</option>
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Tipo de gráfico</label>
+        <select id="tipo_grafico" class="form-select">
+            <option value="disp">Dispersão</option>
+            <option value="reg">Regressão</option>
+            <option value="heat">Heatmap Geral</option>
+            <option value="bins">Faixas (Bins)</option>
+        </select>
+    </div>
+
+    <div class="col-md-4 d-flex align-items-end">
+        <button type="button" class="btn btn-primary w-100" onclick="carregarGrafico()">Gerar Gráfico</button>
+    </div>
+
+</form>
+
+<!-- EXIBIÇÃO DO GRÁFICO -->
+<div class="card shadow-sm">
+    <div class="card-body text-center">
+        <img id="grafico" src="" class="img-fluid" style="max-height: 600px;">
+    </div>
+</div>
+
+
+<!-- =============================== -->
+<!-- OVERLAY (TELA DE LOADING)      -->
+<!-- =============================== -->
+<div id="overlay" style="
+    position: fixed; 
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.6);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    z-index: 9999;
+    color:white;
+">
+    <h3>Atualizando dados...</h3>
+
+    <div style="width: 60%; background: #555; height: 25px; border-radius: 6px; margin-top: 15px;">
+        <div id="barra" style="
+            height: 100%; 
+            width: 0%; 
+            background: #28a745; 
+            border-radius: 6px;
+            transition: width 0.3s;">
+        </div>
+    </div>
+
+    <pre id="log_texto" style="
+        margin-top:20px; 
+        width:70%; 
+        height:200px; 
+        overflow:auto; 
+        background:#222; 
+        padding:10px; 
+        border-radius:6px;
+        color:#0f0;">
+    </pre>
+</div>
+
+
+<!-- =========================== -->
+<!-- SCRIPTS DE GRÁFICOS EXIST. -->
+<!-- =========================== -->
+<script>
+function carregarGrafico() {
+    const indicador = document.getElementById("indicador").value;
+    const tipo = document.getElementById("tipo_grafico").value;
+
+    let url = "/grafico/" + tipo + "?indicador=" + indicador;
+    document.getElementById("grafico").src = url;
+}
+</script>
+
+
+
+<!-- ============================================= -->
+<!-- SCRIPTS DE ATUALIZAÇÃO DO HUB (NOVOS)         -->
+<!-- ============================================= -->
+<script>
+
+function iniciarAtualizacao() {
+
+document.getElementById("overlay").style.display = "flex";
+
+fetch("/atualizar", {
+    method: "POST"
+})
+.then(r => r.json())
+.then(data => {
+
+    if (data.status === "iniciado") {
+        verificarStatus();
+    } else {
+        // Já está atualizando
+        verificarStatus();
+    }
+});
+}
+
+// ===========================
+// Consulta progresso no backend
+// ===========================
+function verificarStatus() {
+
+fetch("/progresso")
+    .then(r => r.json())
+    .then(data => {
+
+        // Atualiza barra
+        document.getElementById("barra").style.width = data.progresso + "%";
+
+        // Atualiza log
+        document.getElementById("log_texto").textContent = data.log;
+
+        // Se terminou → esconder overlay
+        if (!data.atualizando) {
+            setTimeout(() => {
+                document.getElementById("overlay").style.display = "none";
+            }, 800);
+            return;
+        }
+
+        // Continua monitorando
+        setTimeout(verificarStatus, 700);
+    });
+}
+
+
+</script>
+
+{% endblock %}
