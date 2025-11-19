@@ -1,9 +1,9 @@
 # data_hub_ce.py
 
-from BuscarDadosIBGE import BuscarDadosIBGE
-from BuscarDadosEstabelecimentos import BuscarDadosEstabelecimentos
-from BuscarDadosIDHM import BuscarDadosIDHM
-from BuscarDadosMortalidade import BuscarDadosMortalidade
+from source.Tratamento.BuscarDadosIBGE import BuscarDadosIBGE
+from source.Tratamento.BuscarDadosEstabelecimentos import BuscarDadosEstabelecimentos
+from source.Tratamento.BuscarDadosIDHM import BuscarDadosIDHM
+from source.Tratamento.BuscarDadosMortalidade import BuscarDadosMortalidade
 
 class DataHubCE:
     """

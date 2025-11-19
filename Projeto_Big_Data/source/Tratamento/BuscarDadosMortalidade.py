@@ -3,7 +3,7 @@ import requests as rq
 import pandas as pd
 
 class BuscarDadosMortalidade:
-    def __init__(self, pasta_destino: str = "DataSetBruto"):
+    def __init__(self, pasta_destino: str = "Recurso/ DataSetBruto"):
         self.pasta_destino = pasta_destino
         os.makedirs(self.pasta_destino, exist_ok=True)
 

@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import re
 
-PATH = "DataIDHM_ce\data.xlsx"
+PATH = "Recurso\DataIDHM_ce\data.xlsx"
 
 class BuscarDadosIDHM:
     def __init__(self, df_ibge, path_excel = PATH):

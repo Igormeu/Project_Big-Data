@@ -7,7 +7,7 @@ import numpy as np
 import re
 import unicodedata
 
-PATH = "dados_cnes_ce/QuantidadeCNES.csv"
+PATH = "Recurso/dados_cnes_ce/QuantidadeCNES.csv"
 
 def normalizar_nome(nome):
     """Remove acentos, deixa minúsculo e remove múltiplos espaços."""

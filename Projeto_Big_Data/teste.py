@@ -1,6 +1,6 @@
-from mapas_ce import carregar_shapefile, preparar_mapa_ce, mapa_mortalidade
-from HubDados import DataHubCE
-from modulo_analise import preparar_dados
+from source.mapas_ce import carregar_shapefile, preparar_mapa_ce, mapa_mortalidade
+from source.Tratamento.HubDados import DataHubCE
+from source.modulo_analise import preparar_dados
 import matplotlib.pyplot as plt
 
 hub = DataHubCE()
